@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+<title>Simple Fractal Demo</title>
+</head>
+<script type="text/javascript">
+var recursion;
+var drawContext;
+var height;
+var width;
+var begin;
+var end;
+var unit;
+
+function init()
+{
+    recursion = 1;
+    unit = 2;
+    begin = end = 0;
+
+    var canvas = document.getElementById("canvas");
+    drawContext = canvas.getContext("2d");
+    height = canvas.height;
+    width = canvas.width;
+
+    var i = 1;
+    while (height >= (i << 1)) {
+        i <<= 1;
+    }
+    height = i;
+
+    i = 1;
+    while (width >= (i << 1)) {
+        i <<= 1;
+    }
+    width = i;
+
+    if (width > height) {
+        width = height;
+    }
+    else {
+        height = width;
+    }
+
+    end = begin + width;
+}
+
+function box(i, j, r)
+{
+   drawContext.rect(i, j, r, r);
+   drawContext.fillStyle = "#8ED6FF";
+   drawContext.fill(); 
+}
+
+function fractal()
+{
+    var r = Math.pow(2, recursion - 1) * unit;
+    if (begin + r + r * 2 > end) {
+        alert("Exceed limit");
+        return;
+    }
+
+    var i;
+    var j;
+    for (i = 0; begin + i + r < end; i += (r << 2)) {
+        for (j = 0; begin + j + r < end; j += (r << 2)) {
+            box(begin + i + r, begin + j + r, (r << 1));
+        }
+    }
+    var p = document.getElementById("message");
+    p.innerHTML = "Ready";
+    recursion++;
+}
+
+function run()
+{
+    var p = document.getElementById("message");
+    p.innerHTML = "Drawing...";
+    setTimeout(fractal, 100);
+}
+
+window.onload=init
+</script>
+<body>
+    <div>
+        <ul>
+            <p>Simple Fractal Demo from Figure 5.12, Algorithms in C, third edition, Robert Sedgewick</p>
+            <p>Draws a simple fractal like <a href="http://ww1.sinaimg.cn/mw690/55cc8e59jw1e5lrpaiajlj20e80e63zs.jpg">this</a>. Click 'Run' below to draw step by step.</p>
+        </ul>
+        <ul>
+            <canvas id="canvas" width="512" height="512">
+                <p>Your browser doesn't support canvas</p>
+            </canvas>
+        </ul>
+        <ul><p id="message">Ready</p></ul>
+        <ul>
+            <button id="btnRun" onclick="run();">Run</button>
+            <button id="btnInit" onclick="init();">Reset</button>
+        </ul>
+    </div>
+</body>
+</html>
