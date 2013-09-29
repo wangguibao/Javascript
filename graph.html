@@ -7,16 +7,31 @@
 <script src="graph/graphadjacencymatrix.js"></script>
 <script src="graph/randomgraph.js"></script>
 <script type="text/javascript">
+var graph;
 function randGraph()
 {
-    var graph = randomGraph(10, 20);
+    graph = randomGraph(10, 20);
 
     var canvas = document.getElementById("canvas");
     var context = canvas.getContext("2d");
     context.clearRect(0, 0, canvas.width, canvas.height);
     graph.arrangeVertices(canvas.width, canvas.height);
     graph.draw();
+    
+    var button = document.getElementById("dfs");
+    button.disabled = false;
 }
+
+function dfsR() {
+
+}
+
+window.onload = function() {
+	graph = null;
+	var button = document.getElementById("dfs");
+	button.disabled = true;
+}
+
 </script>
 </head>
 <body>
@@ -26,6 +41,7 @@ function randGraph()
 	</div>
 	<div>
 	<input type="button" value="Random Graph" onclick="randGraph();"></input>
+	<input id="dfs" type="button" value="DFS Traversal" onclick="dfsR();"></input>
 	</div>
 </body>
 </html>

@@ -103,7 +103,7 @@ Graph.prototype.draw = function()
 	}
     }
     context.closePath();
-    context.strokeStyle = "red";
+    context.strokeStyle = "LightGray";
     context.lineWidth = 2;
     context.stroke();
 
