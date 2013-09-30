@@ -36,7 +36,7 @@ function Graph(V) {
 Graph.prototype.insertEdge = function(e) {
     var i = e.v;
     var j = e.w;
-    if (i >= 10 || j >= 10) {
+    if (i >= this.V || j >= this.V) {
         console.log(i + ", " + j);
         return;
     }
