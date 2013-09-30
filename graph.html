@@ -4,13 +4,30 @@
 <head>
 <title>Template</title>
 <link rel="stylesheet" type="text/css" href="css/default.css"></link>
+<script src="graph/util.js"></script>
 <script src="graph/graphadjacencymatrix.js"></script>
 <script src="graph/randomgraph.js"></script>
 <script type="text/javascript">
 var graph;
-function randGraph()
-{
-    graph = randomGraph(10, 20);
+function randGraph() {
+    var htmlElement = document.getElementById("vertice");
+    var vertice = Number(htmlElement.value);
+
+    htmlElement = document.getElementById("edges");
+    var edges = Number(htmlElement.value);
+
+    if (vertice <= 0 || edges <= 0) {
+        alert("Invalid input");
+        return;
+    }
+    
+    if (edges > vertice * (vertice - 1) / 2) {
+        alert("Edge count for " + vertice + " vertice undirected graph too large."
+              + " Max " + vertice * (vertice - 1) / 2);
+        return;
+    }
+
+    graph = randomGraph(vertice, edges);
 
     var canvas = document.getElementById("canvas");
     var context = canvas.getContext("2d");
@@ -22,26 +39,47 @@ function randGraph()
     button.disabled = false;
 }
 
-function dfsR() {
+function dfs() {
+    graph.dfs();
+}
 
+function runDfsAgain() {
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    graph.draw();
+    graph.dfs();
 }
 
 window.onload = function() {
-	graph = null;
-	var button = document.getElementById("dfs");
-	button.disabled = true;
+    graph = null;
+    var button = document.getElementById("dfs");
+    button.disabled = true;
 }
 
+function clearDebug() {
+    var htmlElement = document.getElementById("debug");
+    htmlElement.textContent="";
+}
 </script>
 </head>
 <body>
-	<h1>Graph algorithms live demo</h1>
-	<div>
-	<canvas id="canvas" width="800" height="400"></canvas>
-	</div>
-	<div>
-	<input type="button" value="Random Graph" onclick="randGraph();"></input>
-	<input id="dfs" type="button" value="DFS Traversal" onclick="dfsR();"></input>
-	</div>
+    <h1>Graph algorithms live demo</h1>
+    <div>
+        <canvas id="canvas" width="800" height="400"></canvas>
+    </div>
+    <div>
+        vertice <input id="vertice" type="text" value="10"></input>
+        edges <input id="edges" type="text" value="10"></input>
+    </div>
+    <div>
+        <input type="button" value="Random Graph" onclick="randGraph();"></input>
+        <input id="dfs" type="button" value="DFS Traversal" onclick="dfs();"></input>
+        <input type="button" value="Run again" onclick="runDfsAgain();"></input>
+    </div>
+    <div>
+        <textarea autofocus="true" id="debug" cols="60" rows="5"></textarea>
+        <input type="button" value="Clear" onclick="clearDebug();"></input>
+    </div>
 </body>
 </html>
