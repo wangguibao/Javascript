@@ -120,9 +120,9 @@ Graph.prototype.arrangeVertices = function(X, Y) {
 
     var i;
     for (i = 0; i < this.V; i++) {
-    var x = Math.floor(Math.random() * this.X);
-    var y = Math.floor(Math.random() * this.Y);
-    this.loc[i] = [x, y];
+        var x = Math.floor(Math.random() * this.X);
+        var y = Math.floor(Math.random() * this.Y);
+        this.loc[i] = [x, y];
     }
 }
 
@@ -159,8 +159,7 @@ Graph.prototype.dfsR = function(e) {
         var graph = this;
         setTimeout(
             function() {
-                var text = "";
-                text = (v + "->" + w);
+                var text = (v + "->" + w);
                 debugOutput(text);
                 graph.drawLine(v, w, fgLineStyle);
             },
@@ -176,19 +175,77 @@ Graph.prototype.dfsR = function(e) {
 
 Graph.prototype.dfs = function() {
     var i;
-    
+
     this.cnt_pre = 0;
-    
+
     for (i = 0; i < this.V; i++) {
         this.pre[i] = -1;
     }
-    
+
     for (i = 0; i < this.V; i++) {
         if (this.pre[i] == -1) {
             this.dfsR(new Edge(i, i));
         }
     }
-    
+
+    var line = "";
+    for (i = 0; i < this.V; i++) {
+        line += this.pre[i] + " ";
+    }
+    debugOutput(line);
+}
+
+Graph.prototype.bfsR = function(e) {
+    var w = e.w;
+    var edges = [];
+
+    this.pre[w] = this.cnt_pre++;
+    edges.push(e);
+
+    while (edges.length > 0) {
+        var e = edges.shift();
+        w = e.w;
+
+        var i;
+        for (i = 0; i < this.V; i++) {
+            if (this.pre[i] == -1 && this.adj[w][i] == 1) {
+                var graph = this;
+
+                this.pre[i] = this.cnt_pre++;
+                var u = w;
+                var v = i;
+                /*
+                 * The idea to call setTimeout with arguments comes from
+                 * http://stackoverflow.com/questions/2171602/settimeout-and-anonymous-function-problem
+                 */
+                setTimeout(
+                    (function(u, v) {
+                        return function() {
+                            var text = (u + "->" + v);
+                            debugOutput(text);
+                            graph.drawLine(u, v, fgLineStyle);
+                        }
+                    })(u, v),
+                    1500 * this.pre[v]);
+                edges.push(new Edge(u, v));
+            }
+        }
+    }
+}
+
+Graph.prototype.bfs = function() {
+    var i;
+
+    for (i = 0; i < this.V; i++) {
+        this.pre[i] = -1;
+    }
+    this.cnt_pre = 0;
+
+    for (i = 0; i < this.V; i++) {
+        if (this.pre[i] == -1) {
+            this.bfsR(new Edge(i, i));
+        }
+    }
     var line = "";
     for (i = 0; i < this.V; i++) {
         line += this.pre[i] + " ";

@@ -8,6 +8,8 @@
 <script src="graph/graphadjacencymatrix.js"></script>
 <script src="graph/randomgraph.js"></script>
 <script type="text/javascript">
+var lastAlgo;
+
 var graph;
 function randGraph() {
     var htmlElement = document.getElementById("vertice");
@@ -20,7 +22,7 @@ function randGraph() {
         alert("Invalid input");
         return;
     }
-    
+
     if (edges > vertice * (vertice - 1) / 2) {
         alert("Edge count for " + vertice + " vertice undirected graph too large."
               + " Max " + vertice * (vertice - 1) / 2);
@@ -34,21 +36,40 @@ function randGraph() {
     context.clearRect(0, 0, canvas.width, canvas.height);
     graph.arrangeVertices(canvas.width, canvas.height);
     graph.draw();
-    
+
     var button = document.getElementById("dfs");
     button.disabled = false;
 }
 
 function dfs() {
-    graph.dfs();
-}
-
-function runDfsAgain() {
     var canvas = document.getElementById("canvas");
     var context = canvas.getContext("2d");
     context.clearRect(0, 0, canvas.width, canvas.height);
     graph.draw();
+    lastAlgo = 'dfs';
     graph.dfs();
+}
+
+function bfs() {
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    graph.draw();
+    lastAlgo = 'bfs';
+    graph.bfs();
+}
+
+function runAgain() {
+    var canvas = document.getElementById("canvas");
+    var context = canvas.getContext("2d");
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    graph.draw();
+    if (lastAlgo == 'dfs') {
+        graph.dfs();
+    }
+    else if (lastAlgo == 'bfs') {
+        graph.bfs();
+    }
 }
 
 window.onload = function() {
@@ -75,7 +96,8 @@ function clearDebug() {
     <div>
         <input type="button" value="Random Graph" onclick="randGraph();"></input>
         <input id="dfs" type="button" value="DFS Traversal" onclick="dfs();"></input>
-        <input type="button" value="Run again" onclick="runDfsAgain();"></input>
+        <input id="dfs" type="button" value="BFS Traversal" onclick="bfs();"></input>
+        <input type="button" value="Run again" onclick="runAgain();"></input>
     </div>
     <div>
         <textarea autofocus="true" id="debug" cols="60" rows="5"></textarea>
